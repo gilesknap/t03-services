@@ -15,7 +15,7 @@ echo "Loading environment for t03 IOC Instances and Services ..."
 
 export EC_CLI_BACKEND="K8S"
 # the namespace to use for kubernetes deployments
-export EC_TARGET=bl03t
+export EC_TARGET=t03-beamline
 # the git repo for this project
 export EC_SERVICES_REPO=https://github.com/gilesknap/t03-services
 # declare your centralised log server Web UI
