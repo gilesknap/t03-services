@@ -1,0 +1,11 @@
+# shared values for all services
+
+global:
+  ioc_group: t03
+  location: bl03t
+  enabled: true
+
+ioc-instance:
+  # useHostNetwork - use host network for IOC - required for Channel Access
+  # to work outside of the cluster
+  hostNetwork: false
