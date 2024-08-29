@@ -15,11 +15,15 @@ echo "Loading environment for t03 IOC Instances and Services ..."
 
 export EC_CLI_BACKEND="K8S"
 # the namespace to use for kubernetes deployments
+<<<<<<< before updating
 export EC_TARGET=t03-beamline
+=======
+export EC_TARGET=hgv27681
+>>>>>>> after updating
 # the git repo for this project
 export EC_SERVICES_REPO=https://github.com/gilesknap/t03-services
 # declare your centralised log server Web UI
-export EC_LOG_URL=""
+export EC_LOG_URL="https://graylog2.diamond.ac.uk/search?rangetype=relative&fields=message%2Csource&width=1489&highlightMessage=&relative=172800&q=pod_name%3A{service_name}*"
 
 #### SECTION 2. Install ec #####################################################
 
@@ -36,7 +40,14 @@ source <(ec --show-completion ${SHELL})
 #### SECTION 3. Configure Kubernetes Cluster ###################################
 
 
-# TODO add commands here to enable kubectl to connect to the cluster
+# the following configures kubernetes inside DLS.
+
+module unload pollux > /dev/null
+module load pollux > /dev/null
+# set the default namespace for kubectl and helm (for convenience only)
+kubectl config set-context --current --namespace=hgv27681
+# make sure the user has provided credentials
+kubectl version
 
 
 # enable shell completion for k8s tools
