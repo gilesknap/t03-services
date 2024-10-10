@@ -1,0 +1,67 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: cagateway
+  labels:
+    app: cagateway
+    - manager: controller
+      operation: Update
+      apiVersion: v1
+      time: '2024-09-06T10:09:31Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:status:
+          f:loadBalancer:
+            f:ingress: {}
+      subresource: status
+    - manager: helm
+      operation: Update
+      apiVersion: v1
+      time: '2024-09-06T10:09:31Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:meta.helm.sh/release-name: {}
+            f:meta.helm.sh/release-namespace: {}
+          f:labels:
+            .: {}
+            f:app: {}
+            f:app.kubernetes.io/managed-by: {}
+        f:spec:
+          f:allocateLoadBalancerNodePorts: {}
+          f:externalTrafficPolicy: {}
+          f:internalTrafficPolicy: {}
+          f:ports:
+            .: {}
+            k:{"port":9064,"protocol":"TCP"}:
+              .: {}
+              f:name: {}
+              f:port: {}
+              f:protocol: {}
+              f:targetPort: {}
+            k:{"port":9064,"protocol":"UDP"}:
+              .: {}
+              f:name: {}
+              f:port: {}
+              f:protocol: {}
+              f:targetPort: {}
+          f:selector: {}
+          f:sessionAffinity: {}
+          f:type: {}
+spec:
+  ports:
+    - name: channel-access
+      protocol: TCP
+      port: 9064
+      targetPort: 9064
+      nodePort: 31507
+    - name: channel-access-udp
+      protocol: UDP
+      port: 9064
+      targetPort: 9064
+      nodePort: 31507
+  selector:
+    app: cagateway
+  type: LoadBalancer
