@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://github.com/epics-containers/ec-helm-charts/releases/download/4.1.3/ioc-instance.schema.json
+
+# shared values for all services
+
+global:
+  ioc_group: t03
+  location: t03
+  enabled: true
+
+ioc-instance:
+  # useHostNetwork - use host network for IOC - required for Channel Access
+  # to work outside of the cluster
+  hostNetwork: false
