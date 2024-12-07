@@ -15,7 +15,7 @@ echo "Loading environment for t03 IOC Instances and Services ..."
 
 export EC_CLI_BACKEND="K8S"
 # the namespace to use for kubernetes deployments
-export EC_TARGET=hgv27681
+export EC_TARGET=${FED_ID:-$(id -u)}
 # the git repo for this project
 export EC_SERVICES_REPO=https://github.com/gilesknap/t03-services
 # declare your centralised log server Web UI
@@ -41,7 +41,7 @@ source <(ec --show-completion ${SHELL})
 module unload pollux > /dev/null
 module load pollux > /dev/null
 # set the default namespace for kubectl and helm (for convenience only)
-kubectl config set-context --current --namespace=hgv27681
+kubectl config set-context --current --namespace=${FED_ID:-$(id -u)}
 # make sure the user has provided credentials
 kubectl version
 

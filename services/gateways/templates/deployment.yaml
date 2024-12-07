@@ -20,12 +20,16 @@ spec:
            - bash
           args:
            - "-c"
-           - "python3 /launch_gateway.py --port 9064 --namespace ${MY_POD_NAMESPACE}"
+           - "/start.sh"
           env:
-            - name: MY_POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
+            - name: EPICS_CA_AUTO_ADDR_LIST
+              value: "NO"
+            - name: EPICS_PVA_AUTO_ADDR_LIST
+              value: "NO"
+            - name: CA_SERVER_PORT
+              value: "9064"
+            - name: PVA_SERVER_PORT
+              value: "9065"
           image: {{ .Values.image }}
           imagePullPolicy: Always
           name: {{ .Release.Name }}
@@ -40,14 +44,15 @@ spec:
             allowPrivilegeEscalation: false
           stdin: true
           tty: true
-          volumeMounts:
-            - mountPath: /config
-              name: config-volume
+          # volumeMounts:
+          #   - mountPath: /config
+          #     name: config-volume
       hostNetwork: false
       restartPolicy: Always
       terminationGracePeriodSeconds: 3
-      volumes:
-        - configMap:
-            defaultMode: 420
-            name: {{ .Release.Name }}-config
-          name: config-volume
+      # at present the built in config in the container is adequate
+      # volumes:
+      #   - configMap:
+      #       defaultMode: 420
+      #       name: {{ .Release.Name }}-config
+      #     name: config-volume

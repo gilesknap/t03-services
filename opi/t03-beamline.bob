@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <display version="2.0.0">
-  <name>p47-beamline</name>
+  <name>t03-beamline</name>
   <width>1250</width>
   <height>1000</height>
   <grid_step_x>4</grid_step_x>
