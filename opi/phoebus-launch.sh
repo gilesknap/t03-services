@@ -2,64 +2,47 @@
 
 # A launcher for the phoebus container that allows X11 forwarding
 
-thisdir=$(realpath $(dirname ${BASH_SOURCE[0]}))
-workspace=$(realpath ${thisdir}/..)
+# To customise for your own kubernetes namespace change the following variables
+OPIS_IP=172.23.168.169          # IP address of the epics-opis service
+GATEWAYS_IP=172.23.168.200      # IP address of the gateways service
 
-if module load phoebus 2>/dev/null; then
-    echo "Using phoebus module"
+# These should not need to be changed:
+CA=9064 PVA=9065
 
-    # settings for p47
-    settings="
-    -resource ${workspace}/opi/t03-beamline.opi
-    -settings ${workspace}/opi/settings.ini
-    "
-
-    set -x
-    phoebus.sh ${settings} "${@}"
-else
-    echo "No phoebus module found, using a container"
-
-    if [[ $(docker --version 2>/dev/null) == *Docker* ]]; then
-        docker=docker
-    else
-        docker=podman
-        args="--security-opt=label=type:container_runtime_t"
-    fi
-
-    XSOCK=/tmp/.X11-unix # X11 socket (but we mount the whole of tmp)
-    XAUTH=/tmp/.container.xauth.$USER
-    touch $XAUTH
-    xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
-    chmod 777 $XAUTH
-
-    x11="
-    -e DISPLAY
-    -v $XAUTH:$XAUTH
-    -e XAUTHORITY=$XAUTH
-    --net host
-    "
-
-    args=${args}"
-    -it
-    "
-
-    export MYHOME=/home/${USER}
-    # mount in your own home dir in same folder for access to external files
-    mounts="
-    -v=/tmp:/tmp
-    -v=${MYHOME}/.ssh:/root/.ssh
-    -v=${MYHOME}:${MYHOME}
-    -v=${workspace}:/workspace
-    "
-
-    # settings for p47
-    settings="
-    -resource /workspace/opi/t03-beamline.opi
-    -settings /workspace/opi/settings.ini
-    "
-
-    set -x
-    $docker run ${mounts} ${args} ${x11} ghcr.io/epics-containers/ec-phoebus:latest ${settings} "${@}"
-
+if [[ -n $TUNNEL ]]; then
+    echo "Tunneling through $GATEWAYS_IP ..."
+    GATEWAYS_IP=localhost
+    echo
+    echo "make sure you are running this command in another terminal:"
+    echo "ssh -L $CA:$GATEWAYS_IP:$CA -L $PVA:$GATEWAYS_IP:$PVA YOUR_FED_ID@YOUR_WORKSTATION sleep 99d"
+    echo
 fi
 
+# decide on docker or podman based on what is available
+if [[ $(docker --version 2>/dev/null) == *Docker* && -z $PODMAN ]]; then
+    docker=docker
+    args="--user $(id -u):$(id -g) "
+    xhost +SI:localuser:$(id -un) # allow local user uid to access X11 server
+else
+    docker=podman
+fi
+
+x11="-e DISPLAY -v /tmp:/tmp --net=host"
+args+="--rm --name phoebus --security-opt label=disable"
+
+echo "
+org.phoebus.pv.pva/epics_pva_name_servers=$GATEWAYS_IP:$PVA
+org.phoebus.pv.ca/name_servers=$GATEWAYS_IP:$CA
+" > /tmp/settings.ini
+
+# settings for p47
+settings="
+-resource http://$OPIS_IP/t03-beamline.bob
+-settings /tmp/settings.ini
+"
+
+echo "Starting phoebus container ..."
+set -x
+$docker run ${args} ${x11} \
+  ghcr.io/epics-containers/ec-phoebus:latest \
+  ${settings} "${@}" &> /tmp/phoebus.log &
