@@ -10,12 +10,11 @@ GATEWAYS_IP=172.23.168.200      # IP address of the gateways service
 CA=9064 PVA=9065
 
 if [[ -n $TUNNEL ]]; then
-    echo "Tunneling through $GATEWAYS_IP ..."
+    echo "
+    For Tunnel to $GATEWAYS_IP run this command in another terminal:-
+    ssh -L $CA:$GATEWAYS_IP:$CA -L $PVA:$GATEWAYS_IP:$PVA ${FED_ID:-_FedId_}${DLS_WS:-_Workstation_} sleep 99d
+    "
     GATEWAYS_IP=localhost
-    echo
-    echo "make sure you are running this command in another terminal:"
-    echo "ssh -L $CA:$GATEWAYS_IP:$CA -L $PVA:$GATEWAYS_IP:$PVA YOUR_FED_ID@YOUR_WORKSTATION sleep 99d"
-    echo
 fi
 
 # decide on docker or podman based on what is available
