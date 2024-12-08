@@ -4,7 +4,7 @@
 
 # To customise for your own kubernetes namespace change the following variables
 OPIS_IP=172.23.168.169          # IP address of the epics-opis service
-GATEWAYS_IP=172.23.168.200      # IP address of the gateways service
+GATEWAYS_IP=172.23.168.190      # IP address of the gateways service
 
 # These should not need to be changed:
 CA=9064 PVA=9065
@@ -12,7 +12,7 @@ CA=9064 PVA=9065
 if [[ -n $TUNNEL ]]; then
     echo "
     For Tunnel to $GATEWAYS_IP run this command in another terminal:-
-    ssh -L $CA:$GATEWAYS_IP:$CA -L $PVA:$GATEWAYS_IP:$PVA ${FED_ID:-_FedId_}${DLS_WS:-_Workstation_} sleep 99d
+    ssh -L $CA:$GATEWAYS_IP:$CA -L $PVA:$GATEWAYS_IP:$PVA ${FED_ID:-_FedId_}@${DLS_WS:-_Workstation_} sleep 99d
     "
     GATEWAYS_IP=localhost
 fi

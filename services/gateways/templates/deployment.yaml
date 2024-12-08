@@ -16,43 +16,54 @@ spec:
         app: {{ .Release.Name }}
     spec:
       containers:
-        - command:
+        - name: {{ .Release.Name }}-ca-gateway
+          command:
            - bash
           args:
            - "-c"
-           - "/start.sh"
+           - "/start-ca.sh"
           env:
             - name: EPICS_CA_AUTO_ADDR_LIST
               value: "NO"
-            - name: EPICS_PVA_AUTO_ADDR_LIST
-              value: "NO"
             - name: CA_SERVER_PORT
               value: "9064"
-            - name: PVA_SERVER_PORT
-              value: "9065"
           image: {{ .Values.image }}
           imagePullPolicy: Always
-          name: {{ .Release.Name }}
           resources:
             limits:
-              cpu: 500m
-              memory: 256Mi
+              cpu: 800m
+              memory: 1024Mi
             requests:
-              cpu: 100m
-              memory: 64Mi
+              cpu: 200m
+              memory: 256Mi
           securityContext:
             allowPrivilegeEscalation: false
           stdin: true
           tty: true
-          # volumeMounts:
-          #   - mountPath: /config
-          #     name: config-volume
+        - name: {{ .Release.Name }}-pva-gateway
+          command:
+           - bash
+          args:
+           - "-c"
+           - "/start-pva.sh"
+          env:
+            - name: EPICS_PVA_AUTO_ADDR_LIST
+              value: "NO"
+            - name: PVA_SERVER_PORT
+              value: "9065"
+          image: {{ .Values.image }}
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 800m
+              memory: 1024Mi
+            requests:
+              cpu: 200m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+          stdin: true
+          tty: true
       hostNetwork: false
       restartPolicy: Always
-      terminationGracePeriodSeconds: 3
-      # at present the built in config in the container is adequate
-      # volumes:
-      #   - configMap:
-      #       defaultMode: 420
-      #       name: {{ .Release.Name }}-config
-      #     name: config-volume
+      terminationGracePeriodSeconds: 1
