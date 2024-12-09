@@ -26,8 +26,10 @@ else
     docker=podman
 fi
 
+
 x11="-e DISPLAY -v /tmp:/tmp --net=host"
 args+="--rm --name phoebus --security-opt label=disable"
+args+=" -v $(realpath $(dirname $0)/..):/workspaces/"
 
 echo "
 org.phoebus.pv.pva/epics_pva_name_servers=$GATEWAYS_IP:$PVA
