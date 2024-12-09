@@ -27,3 +27,11 @@ Tell the phoebus launcher that you are using a tunnel:
 TUNNEL=1 ./opi/launch-phoebus.sh
 ```
 
+# Quick try
+
+The only file needed to set up the phoebus client is the one shell script, so:
+
+```bash
+curl -O https://raw.githubusercontent.com/gilesknap/t03-services/refs/heads/main/opi/phoebus-launch.sh
+bash launch-phoebus.sh
+```
