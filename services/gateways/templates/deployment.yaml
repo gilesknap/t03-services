@@ -32,10 +32,10 @@ spec:
           resources:
             limits:
               cpu: 800m
-              memory: 1024Mi
+              memory: 1500Mi
             requests:
               cpu: 200m
-              memory: 256Mi
+              memory: 400Mi
           securityContext:
             allowPrivilegeEscalation: false
           stdin: true
@@ -56,10 +56,10 @@ spec:
           resources:
             limits:
               cpu: 800m
-              memory: 1024Mi
+              memory: 1500Mi
             requests:
               cpu: 200m
-              memory: 256Mi
+              memory: 400Mi
           securityContext:
             allowPrivilegeEscalation: false
           stdin: true
