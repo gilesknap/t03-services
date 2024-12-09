@@ -20,8 +20,7 @@ spec:
           command:
            - bash
           args:
-           - "-c"
-           - "/start-ca.sh"
+           - "/config/start-ca.sh"
           env:
             - name: EPICS_CA_AUTO_ADDR_LIST
               value: "NO"
@@ -44,8 +43,7 @@ spec:
           command:
            - bash
           args:
-           - "-c"
-           - "/start-pva.sh"
+           - "/config/start-pva.sh"
           env:
             - name: EPICS_PVA_AUTO_ADDR_LIST
               value: "NO"
